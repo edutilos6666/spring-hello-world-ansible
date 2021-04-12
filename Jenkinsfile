@@ -7,6 +7,12 @@ pipeline {
     stages {
         stage("docker registry") {
             steps {
+                   withDockerContainer(image: 'maven',  toolName: 'Docker') {
+                    // some block
+                    sh 'mvn --version'
+                    sh 'mvn clean install'
+                }    
+                
                 script  {
                      docker.withRegistry('http://192.168.178.37:5000') {
 
