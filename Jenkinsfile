@@ -11,7 +11,7 @@ pipeline {
                      docker.withRegistry('http://192.168.178.37:5000') {
 
                         docker.image('nginx').inside {
-                            sh 'make test'
+                            sh 'ls -al'
                         }
                      }
                 }
