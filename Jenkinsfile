@@ -5,6 +5,15 @@ pipeline {
        booleanParam(name: "executeInit", defaultValue: true, description: "")
     }
     stages {
+        stage("docker registry") {
+            steps {
+              // This step should not normally be used in your script. Consult the inline help for details.
+withDockerRegistry(url: 'http://192.168.178.37:5000/') {
+    // some block
+      Image.push("192.168.178.37:5000/foobar")
+}   
+            }
+        }
         stage("Dockerfile exists") {
             when {
                 expression {
