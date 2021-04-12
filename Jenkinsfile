@@ -1,6 +1,14 @@
 pipeline {
     agent any 
     stages {
+        stage("init") {
+            steps {
+                withDockerContainer(image: 'maven',  toolName: 'Docker') {
+                    // some block
+                    sh 'mvn --version'
+                }    
+            }
+        }
         stage('Compile') {
             steps {
                 echo 'Compiling the application!' 
