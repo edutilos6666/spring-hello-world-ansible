@@ -4,7 +4,25 @@ pipeline {
        choice(name: "selectedVersion", choices: ["1.0.0", "1.0.1", "1.1.0"], description: "User chooses the build version")
        booleanParam(name: "executeInit", defaultValue: true, description: "")
     }
+    environment {
+         imageVersion = "1.0.0"
+         imageName = "spring-hello-world-foobar"
+    }
+    tools {
+        maven "local-maven"    
+    }
     stages {
+        stage("build and push image to registry") {
+            steps {
+               sh "mvn package"
+                script {
+                    def springHelloWorldFoobar = docker.build("${env.imageName}:${env.imageVersion}")
+                    docker.withRegistry("http://192.168.178.37:5000") {
+                        springHelloWorldFoobar.push()
+                    }
+                }
+            }
+        }
         stage("docker registry") {
             steps {
                    withDockerContainer(image: 'maven',  toolName: 'Docker') {
