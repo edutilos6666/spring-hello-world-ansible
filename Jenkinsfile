@@ -5,6 +5,12 @@ pipeline {
        booleanParam(name: "executeInit", defaultValue: true, description: "")
     }
     stages {
+        stage("send email") {
+            steps {
+                emailext body: '''<h1>Heading1</h1>
+<h2>Heading2</h2>''', subject: 'test', to: 'edutilosaghayev@gmail.com'   
+            }
+        }
         stage("build hello-world") {
             steps {
                 build job: 'hello-world', parameters: [string(name: 'selectedVersion', value: '1.0.0'), booleanParam(name: 'executeInit', value: true)]   
