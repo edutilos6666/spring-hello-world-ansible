@@ -8,6 +8,7 @@ pipeline {
                     sh 'mvn --version'
                 }    
                 echo "${env.BRANCH_NAME}"
+                echo "${env.BUILD_NUMBER}"
             }
         }
         stage('Compile') {
