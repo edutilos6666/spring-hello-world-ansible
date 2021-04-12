@@ -10,9 +10,10 @@ pipeline {
                 script  {
                      docker.withRegistry('http://192.168.178.37:5000') {
 
-                    docker.image('hello-world').inside {
-                        sh 'make test'
-                    }
+                        docker.image('hello-world').inside {
+                            sh 'make test'
+                        }
+                     }
                 }
             }
 
