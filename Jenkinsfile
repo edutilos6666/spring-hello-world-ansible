@@ -22,6 +22,12 @@ pipeline {
                 emailext body: '''<h1>Heading1</h1>
 <h2>Heading2</h2>''', subject: 'test', to: 'edutilosaghayev@gmail.com'   
             }
+            
+            steps {
+             mail bcc: '', body: '''hello world
+<h1>Heading1</h1>
+<h2>Heading2</h2>''', cc: '', from: '', replyTo: '', subject: 'test Mail', to: 'edutilosaghayev@gmail.com'   
+            }
         }
         stage("build hello-world") {
             steps {
