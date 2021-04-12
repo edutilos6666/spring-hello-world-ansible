@@ -1,7 +1,16 @@
 pipeline {
     agent any 
+    parameters {
+       choice(name: "selectedVersion", choices: ["1.0.0", "1.0.1", "1.1.0"], description: "User chooses the build version")
+       booleanParam(name: "executeInit", defaultValue: true, description: "")
+    }
     stages {
         stage("init") {
+            when {
+                expression {
+                    params.executeInit
+                }
+            }
             steps {
                 withDockerContainer(image: 'maven',  toolName: 'Docker') {
                     // some block
@@ -9,6 +18,7 @@ pipeline {
                 }    
                 echo "${env.BRANCH_NAME}"
                 echo "${env.BUILD_NUMBER}"
+                echo "selectedVersion = ${params.selectedVersion}"
             }
         }
         stage('Compile') {
