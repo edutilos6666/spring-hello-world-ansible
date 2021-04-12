@@ -7,7 +7,10 @@ pipeline {
     stages {
         stage("Dockerfile exists") {
             when {
-             fileExists 'Dockerfile'   
+                expression {
+                    fileExists 'Dockerfile'
+                }
+                
             }
             
             steps {
