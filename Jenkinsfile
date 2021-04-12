@@ -6,7 +6,9 @@ pipeline {
     }
     stages {
         stage("build hello-world") {
-          build job: 'hello-world', parameters: [string(name: 'selectedVersion', value: '1.0.0'), booleanParam(name: 'executeInit', value: true)]   
+            steps {
+                build job: 'hello-world', parameters: [string(name: 'selectedVersion', value: '1.0.0'), booleanParam(name: 'executeInit', value: true)]   
+            }
         }
         stage("init") {
             when {
