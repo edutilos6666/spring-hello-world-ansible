@@ -28,7 +28,7 @@ pipeline {
                    withDockerContainer(image: 'maven',  toolName: 'Docker') {
                     // some block
                     sh 'mvn --version'
-                    sh 'mvn clean install'
+                    sh 'mvn install'
                 }    
                 
                 script  {
