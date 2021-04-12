@@ -7,12 +7,15 @@ pipeline {
     stages {
         stage("docker registry") {
             steps {
-              // This step should not normally be used in your script. Consult the inline help for details.
-withDockerRegistry(credentialsId: 'foobar-virtualBox', url: 'http://192.168.178.37:5000/') {
-    // some block
-      Image.push("192.168.178.37:5000/foobar")
-}   
+                script  {
+                     docker.withRegistry('http://192.168.178.37:5000') {
+
+                    docker.image('hello-world').inside {
+                        sh 'make test'
+                    }
+                }
             }
+
         }
         stage("Dockerfile exists") {
             when {
