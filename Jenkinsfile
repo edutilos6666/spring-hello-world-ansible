@@ -13,6 +13,10 @@ pipeline {
                         docker.image('nginx').inside {
                             sh 'ls -al'
                         }
+                         
+                         
+                         def springHelloWorld =  docker.build("spring-hello-world:${env.BUILD_ID}")
+                         springHelloWorld.push()
                      }
                 }
             }
