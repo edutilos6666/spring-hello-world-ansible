@@ -7,6 +7,7 @@ pipeline {
                     // some block
                     sh 'mvn --version'
                 }    
+                echo "${env.BRANCH_NAME}"
             }
         }
         stage('Compile') {
