@@ -5,6 +5,15 @@ pipeline {
        booleanParam(name: "executeInit", defaultValue: true, description: "")
     }
     stages {
+        stage("Dockerfile exists") {
+            when {
+             fileExists 'Dockerfile'   
+            }
+            
+            steps {
+             echo 'Dockerfile exists'   
+            }
+        }
         stage("send email") {
             steps {
                 emailext body: '''<h1>Heading1</h1>
