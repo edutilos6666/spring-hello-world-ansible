@@ -49,6 +49,16 @@
       package: name=curl state=present
       when: add_repository_key is failed
 
+    - name: Install python pip
+      apt: 
+         name: python-pip
+         state: present
+  
+    - name: Install docker python module (required by docker_container)
+      pip:
+         name: docker
+         state: present 
+
 
     - name: Install Docker.
       package:
