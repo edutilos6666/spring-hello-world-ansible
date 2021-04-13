@@ -2,83 +2,83 @@
 - hosts: dev
   become: True
   vars:
-	  docker_apt_release_channel: stable
-	  docker_apt_arch: amd64
-	  docker_apt_repository: "deb [arch={{ docker_apt_arch }}] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}"
-	  docker_apt_ignore_key_error: True
-	  docker_apt_gpg_key: https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg
+      docker_apt_release_channel: stable
+      docker_apt_arch: amd64
+      docker_apt_repository: "deb [arch={{ docker_apt_arch }}] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}"
+      docker_apt_ignore_key_error: True
+      docker_apt_gpg_key: https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg
   tasks:
-	- name: Ensure old versions of Docker are not installed.
-	  package:
-	    name:
-	      - docker
-	      - docker-engine
-	    state: absent
+    - name: Ensure old versions of Docker are not installed.
+      package:
+        name:
+          - docker
+          - docker-engine
+        state: absent
 
-	- name: Ensure dependencies are installed.
-	  apt:
-	    name:
-	      - apt-transport-https
-	      - ca-certificates
-	    state: present
+    - name: Ensure dependencies are installed.
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+        state: present
 
-	- name: Ensure additional dependencies are installed (on Ubuntu < 20.04 and any other systems).
-	  apt:
-	    name: gnupg2
-	    state: present
-	  when: ansible_distribution != 'Ubuntu' or ansible_distribution_version is version('20.04', '<')
+    - name: Ensure additional dependencies are installed (on Ubuntu < 20.04 and any other systems).
+      apt:
+        name: gnupg2
+        state: present
+      when: ansible_distribution != 'Ubuntu' or ansible_distribution_version is version('20.04', '<')
 
-	- name: Ensure additional dependencies are installed (on Ubuntu >= 20.04).
-	  apt:
-	    name: gnupg
-	    state: present
-	  when: ansible_distribution == 'Ubuntu' or ansible_distribution_version is version('20.04', '>=')
+    - name: Ensure additional dependencies are installed (on Ubuntu >= 20.04).
+      apt:
+        name: gnupg
+        state: present
+      when: ansible_distribution == 'Ubuntu' or ansible_distribution_version is version('20.04', '>=')
 
-	- name: Add Docker apt key.
-	  apt_key:
-	    url: "{{ docker_apt_gpg_key }}"
-	    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
-	    state: present
-	  register: add_repository_key
-	  ignore_errors: "{{ docker_apt_ignore_key_error }}"
+    - name: Add Docker apt key.
+      apt_key:
+        url: "{{ docker_apt_gpg_key }}"
+        id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+        state: present
+      register: add_repository_key
+      ignore_errors: "{{ docker_apt_ignore_key_error }}"
 
-	- name: Ensure curl is present (on older systems without SNI).
-	  package: name=curl state=present
-	  when: add_repository_key is failed
+    - name: Ensure curl is present (on older systems without SNI).
+      package: name=curl state=present
+      when: add_repository_key is failed
 
-	- name: Add Docker apt key (alternative for older systems without SNI).
-	  shell: >
-	    curl -sSL {{ docker_apt_gpg_key }} | sudo apt-key add -
-	  args:
-	    warn: false
-	  when: add_repository_key is failed
+    - name: Add Docker apt key (alternative for older systems without SNI).
+      shell: >
+        curl -sSL {{ docker_apt_gpg_key }} | sudo apt-key add -
+      args:
+        warn: false
+      when: add_repository_key is failed
 
-	- name: Add Docker repository.
-	  apt_repository:
-	    repo: "{{ docker_apt_repository }}"
-	    state: present
-	    update_cache: true
+    - name: Add Docker repository.
+      apt_repository:
+        repo: "{{ docker_apt_repository }}"
+        state: present
+        update_cache: true
 
-	- name: Install docker
-	  apt:
-	    name: docker
-	    state: present
+    - name: Install docker
+      apt:
+        name: docker
+        state: present
 
-	- name: Just force systemd to reread configs (2.4 and above)
-	  ansible.builtin.systemd:
-	  daemon_reload: yes 
+    - name: Just force systemd to reread configs (2.4 and above)
+      ansible.builtin.systemd:
+      daemon_reload: yes 
    
-	- name: start docker
-	  service:
-		name: docker
-		state: started
-		enabled: yes
+    - name: start docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
 
-	 
-	- name: Start the container
-	  docker_container:
-		name: spring-hello-world-ansible
-		image: "{{imageName}}:{{BUILD_ID}}"
-		state: started
-		published_ports:
-		  - 0.0.0.0:8080:8080
+     
+    - name: Start the container
+      docker_container:
+        name: spring-hello-world-ansible
+        image: "{{imageName}}:{{BUILD_ID}}"
+        state: started
+        published_ports:
+          - 0.0.0.0:8080:8080
