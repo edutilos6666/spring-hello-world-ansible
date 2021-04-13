@@ -69,7 +69,7 @@
     - name: Start the container
       docker_container:
         name: spring-hello-world-ansible
-        image: "{{imageName}}:{{BUILD_ID}}"
+        image: "{{imageName}}:{{imageVersion}}"
         state: started
         published_ports:
           - 0.0.0.0:8181:8080
