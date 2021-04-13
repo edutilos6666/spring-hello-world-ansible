@@ -29,7 +29,7 @@ pipeline {
         
         stage("Play ansible playbook in order to start docker container for this image") {
             steps {
-                ansiblePlaybook credentialsId: 'id_rsa_2', disableHostKeyChecking: true, extras: 'imageName=${imageName} imageVersion=${imageVersion}', installation: 'ansible', inventory: 'project.ini', playbook: 'deploy-docker-v2.yml'
+                ansiblePlaybook credentialsId: 'id_rsa_2', disableHostKeyChecking: true, extras: 'imageName=${env.imageName} imageVersion=${env.BUILD_ID}', installation: 'ansible', inventory: 'project.ini', playbook: 'deploy-docker-v2.yml'
             }
         }
     }
