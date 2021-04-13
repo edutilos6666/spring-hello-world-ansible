@@ -1,7 +1,6 @@
 pipeline {
     agent any 
     environment {
-         imageVersion = "${ENV.BUILD_ID}"
          imageName = "spring-hello-world-ansible"
     }
     stages {
@@ -20,7 +19,7 @@ pipeline {
         stage("Build Docker image & push it to the registry") {
             steps  {
                  script {
-                    def springHelloWorldAnsible = docker.build("${env.imageName}:${env.imageVersion}")
+                    def springHelloWorldAnsible = docker.build("${env.imageName}:${env.BUILD_ID}")
                     docker.withRegistry("http://192.168.178.37:5000") {
                         springHelloWorldAnsible.push()
                     }
